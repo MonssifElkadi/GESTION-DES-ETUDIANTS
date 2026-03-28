@@ -1,0 +1,105 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Add Time Table</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'timetable_view' %}">Time Table</a></li>
+                        <li class="breadcrumb-item active">Add Time Table</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="form-title"><span>Time Table Form</span></h5>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Day</label>
+                                        <select class="form-control" name="day" required>
+                                            <option value="">Select Day</option>
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Student Class</label>
+                                        <input type="text" class="form-control" name="student_class" required placeholder="e.g. Grade 10A">
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Subject</label>
+                                        <select class="form-control" name="subject" required>
+                                            <option value="">Select Subject</option>
+                                            {% for s in subjects %}
+                                            <option value="{{ s.pk }}">{{ s.name }} ({{ s.subject_code }})</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Teacher (Optional)</label>
+                                        <select class="form-control" name="teacher">
+                                            <option value="">Select Teacher</option>
+                                            {% for t in teachers %}
+                                            <option value="{{ t.pk }}">{{ t.first_name }} {{ t.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>Start Time</label>
+                                        <!-- Keep in mind that input type="time" expects "HH:MM" formatted string -->
+                                        <input type="time" class="form-control" name="start_time" required>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="form-group">
+                                        <label>End Time</label>
+                                        <input type="time" class="form-control" name="end_time" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <a href="{% url 'timetable_view' %}" class="btn btn-secondary ml-2">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright © 2026 PreSkool.</p>
+    </footer>
+</div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>
+{% endblock %}
