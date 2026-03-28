@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'student',
     'home_auth',
     'departement',
+    'teacher',
+    'subject', 
+    'holiday',
 ]
 
 AUTH_USER_MODEL = 'home_auth.CustomUser'

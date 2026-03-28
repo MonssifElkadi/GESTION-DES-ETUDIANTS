@@ -1,0 +1,91 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Teacher Details</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'teacher_list' %}">Teachers</a></li>
+                        <li class="breadcrumb-item active">Teacher Details</li>
+                    </ul>
+                </div>
+                <div class="col-auto text-right float-right ml-auto">
+                    <a href="{% url 'edit_teacher' teacher.pk %}" class="btn btn-primary"><i class="fas fa-pen"></i> Edit</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-header">
+                    <div class="row align-items-center">
+                        <div class="col-auto profile-image">
+                            <a href="#">
+                                {% if teacher.teacher_image %}
+                                    <img class="rounded-circle" alt="User Image" src="{{ teacher.teacher_image.url }}">
+                                {% else %}
+                                    <img class="rounded-circle" alt="User Image" src="{% static 'assets/img/profiles/avatar-02.jpg' %}">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="col ml-md-n2 profile-user-info">
+                            <h4 class="user-name mb-0">{{ teacher.first_name }} {{ teacher.last_name }}</h4>
+                            <h6 class="text-muted">{{ teacher.department.name|default:"No Department" }}</h6>
+                            <div class="user-Location"><i class="fas fa-map-marker-alt"></i> {{ teacher.address|default:"Location not provided" }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title d-flex justify-content-between">
+                                    <span>Personal Details</span>
+                                </h5>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Teacher ID</p>
+                                    <p class="col-sm-9">{{ teacher.teacher_id }}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Email ID</p>
+                                    <p class="col-sm-9">{{ teacher.email }}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Mobile</p>
+                                    <p class="col-sm-9">{{ teacher.mobile_number }}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Gender</p>
+                                    <p class="col-sm-9">{{ teacher.gender }}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Date of Birth</p>
+                                    <p class="col-sm-9">{{ teacher.date_of_birth }}</p>
+                                </div>
+                                <div class="row">
+                                    <p class="col-sm-3 text-muted text-sm-right mb-0 mb-sm-3">Joining Date</p>
+                                    <p class="col-sm-9">{{ teacher.joining_date }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright © 2026 PreSkool.</p>
+    </footer>
+</div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>
+{% endblock %}

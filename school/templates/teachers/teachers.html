@@ -1,0 +1,91 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Teachers</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Teachers</li>
+                    </ul>
+                </div>
+                <div class="col-auto text-right float-right ml-auto">
+                    <a href="{% url 'add_teacher' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Teacher</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0 datatable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Gender</th>
+                                        <th>Mobile Number</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in teachers %}
+                                    <tr>
+                                        <td>{{ item.teacher_id }}</td>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                {% if item.teacher_image %}
+                                                <a href="{% url 'view_teacher' item.pk %}" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" src="{{ item.teacher_image.url }}" alt="User Image">
+                                                </a>
+                                                {% else %}
+                                                <a href="{% url 'view_teacher' item.pk %}" class="avatar avatar-sm mr-2">
+                                                    <img class="avatar-img rounded-circle" src="{% static 'assets/img/profiles/avatar-02.jpg' %}" alt="User Image">
+                                                </a>
+                                                {% endif %}
+                                                <a href="{% url 'view_teacher' item.pk %}">{{ item.first_name }} {{ item.last_name }}</a>
+                                            </h2>
+                                        </td>
+                                        <td>{{ item.department.name|default:"Not Assigned" }}</td>
+                                        <td>{{ item.gender }}</td>
+                                        <td>{{ item.mobile_number }}</td>
+                                        <td class="text-right">
+                                            <div class="actions">
+                                                <a href="{% url 'edit_teacher' item.pk %}" class="btn btn-sm bg-success-light mr-2">
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+                                                <a href="{% url 'delete_teacher' item.pk %}" class="btn btn-sm bg-danger-light" onclick="return confirm('Are you sure you want to delete this teacher?');">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="6" class="text-center">No Teachers Found</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright © 2026 PreSkool.</p>
+    </footer>
+</div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>
+{% endblock %}
