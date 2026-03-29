@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student, Parent
+from home_auth.decorators import teacher_required
 
 
+@teacher_required
 def student_list(request):
     student_list = Student.objects.all()
     return render(request, 'students/students.html', {'student_list': student_list})
 
 
+@teacher_required
 def add_student(request):
     if request.method == 'POST':
         # Create Parent first
@@ -43,6 +46,7 @@ def add_student(request):
     return render(request, 'students/add-student.html')
 
 
+@teacher_required
 def edit_student(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     if request.method == 'POST':
@@ -74,11 +78,13 @@ def edit_student(request, student_id):
     return render(request, 'students/edit-student.html', {'student': student})
 
 
+@teacher_required
 def view_student(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     return render(request, 'students/student-details.html', {'student': student})
 
 
+@teacher_required
 def delete_student(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
     if request.method == 'POST':

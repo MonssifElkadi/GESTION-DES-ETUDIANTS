@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Department
+from home_auth.decorators import admin_required
 
+@admin_required
 def departement_list(request):
     departments = Department.objects.all()
     return render(request,'departments/department.html' , {'departments' : departments})
 
+@admin_required
 def add_department(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -18,6 +21,7 @@ def add_department(request):
         return redirect('department_list')
     return render(request,'departments/add-department.html')
 
+@admin_required
 def edit_department(request, pk):
     department = get_object_or_404(Department, pk=pk)
     if request.method == 'POST':
@@ -28,6 +32,7 @@ def edit_department(request, pk):
         return redirect('department_list')
     return render(request, 'departments/edit-department.html', {'department': department})
 
+@admin_required
 def delete_department(request, pk):
     department = get_object_or_404(Department, pk=pk)
     department.delete()

@@ -1,0 +1,90 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+   <div class="page-wrapper">
+      <div class="content container-fluid">
+         <div class="page-header">
+            <div class="row">
+               <div class="col-sm-12">
+                  <h3 class="page-title">Welcome Teacher!</h3>
+                  <ul class="breadcrumb">
+                     <li class="breadcrumb-item active">Teacher Dashboard</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-md-6 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header">
+                     <h5 class="card-title">My Subjects</h5>
+                  </div>
+                  <div class="card-body">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-center">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th>Subject Code</th>
+                                 <th>Name</th>
+                                 <th>Department</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for item in subjects %}
+                              <tr>
+                                 <td>{{ item.subject_code }}</td>
+                                 <td>{{ item.name }}</td>
+                                 <td>{{ item.department.name }}</td>
+                              </tr>
+                              {% empty %}
+                              <tr><td colspan="3" class="text-center">No subjects mapped</td></tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header">
+                     <h5 class="card-title">Upcoming Time Table</h5>
+                  </div>
+                  <div class="card-body">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-center">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th>Day</th>
+                                 <th>Time</th>
+                                 <th>Class</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for item in timetables %}
+                              <tr>
+                                 <td>{{ item.day }}</td>
+                                 <td>{{ item.start_time|time:"H:i" }} - {{ item.end_time|time:"H:i" }}</td>
+                                 <td>{{ item.student_class }}</td>
+                              </tr>
+                              {% empty %}
+                              <tr><td colspan="3" class="text-center">No upcoming schedules</td></tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <footer>
+         <p>Copyright © 2026 PreSkool.</p>
+      </footer>
+   </div>
+   <script src="{%static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+   <script src="{%static 'assets/js/popper.min.js' %}"></script>
+   <script src="{%static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+   <script src="{%static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+   <script src="{%static 'assets/js/script.js' %}"></script>
+{% endblock %}

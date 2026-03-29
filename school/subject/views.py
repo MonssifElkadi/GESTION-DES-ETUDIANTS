@@ -3,11 +3,14 @@ from django.contrib import messages
 from .models import Subject
 from departement.models import Department
 from teacher.models import Teacher
+from home_auth.decorators import teacher_required
 
+@teacher_required
 def subject_list(request):
     subjects = Subject.objects.all()
     return render(request, 'subjects/subjects.html', {'subjects': subjects})
 
+@teacher_required
 def add_subject(request):
     departments = Department.objects.all()
     teachers    = Teacher.objects.all()
@@ -28,6 +31,7 @@ def add_subject(request):
         return redirect('subject_list')
     return render(request, 'subjects/add-subject.html', {'departments': departments, 'teachers': teachers})
 
+@teacher_required
 def edit_subject(request, pk):
     subject     = get_object_or_404(Subject, pk=pk)
     departments = Department.objects.all()
@@ -44,6 +48,7 @@ def edit_subject(request, pk):
         return redirect('subject_list')
     return render(request, 'subjects/edit-subject.html', {'subject': subject, 'departments': departments, 'teachers': teachers})
 
+@teacher_required
 def delete_subject(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     subject.delete()

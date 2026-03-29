@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'subject', 
     'holiday',
     'timetable',
+    'exam', 
 ]
 
 AUTH_USER_MODEL = 'home_auth.CustomUser'

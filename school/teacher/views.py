@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Teacher
 from departement.models import Department
+from home_auth.decorators import admin_required
 
+@admin_required
 def teacher_list(request):
     teachers = Teacher.objects.all()
     return render(request, 'teachers/teachers.html', {'teachers': teachers})
 
+@admin_required
 def add_teacher(request):
     departments = Department.objects.all()
     if request.method == 'POST':
@@ -40,10 +43,12 @@ def add_teacher(request):
         return redirect('teacher_list')
     return render(request, 'teachers/add-teacher.html', {'departments': departments})
 
+@admin_required
 def view_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
     return render(request, 'teachers/teacher-details.html', {'teacher': teacher})
 
+@admin_required
 def edit_teacher(request, pk):
     teacher     = get_object_or_404(Teacher, pk=pk)
     departments = Department.objects.all()
@@ -66,6 +71,7 @@ def edit_teacher(request, pk):
         return redirect('teacher_list')
     return render(request, 'teachers/edit-teacher.html', {'teacher': teacher, 'departments': departments})
 
+@admin_required
 def delete_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
     teacher.delete()

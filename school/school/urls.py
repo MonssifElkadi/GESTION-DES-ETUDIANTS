@@ -26,7 +26,8 @@ urlpatterns = [
     path('authentication/', include('home_auth.urls')),
     path('departement/', include('departement.urls')),
     path('teacher/', include('teacher.urls')),
-     path('subject/', include('subject.urls')),
-     path('holiday/', include('holiday.urls')),
-     path('timetable/', include('timetable.urls')),  
+    path('subject/', include('subject.urls')),
+    path('holiday/', include('holiday.urls')),
+    path('timetable/', include('timetable.urls')),  
+    path('exam/', include('exam.urls')),  
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

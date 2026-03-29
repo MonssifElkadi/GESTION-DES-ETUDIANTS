@@ -3,11 +3,14 @@ from django.contrib import messages
 from .models import TimeTable
 from subject.models import Subject
 from teacher.models import Teacher
+from home_auth.decorators import login_required_custom, teacher_required
 
+@login_required_custom
 def timetable_view(request):
     timetables = TimeTable.objects.all().order_by('day', 'start_time')
     return render(request, 'timetable/timetable.html', {'timetables': timetables})
 
+@teacher_required
 def add_timetable(request):
     subjects = Subject.objects.all()
     teachers = Teacher.objects.all()
@@ -32,6 +35,7 @@ def add_timetable(request):
         return redirect('timetable_view')
     return render(request, 'timetable/add-timetable.html', {'subjects': subjects, 'teachers': teachers})
 
+@teacher_required
 def edit_timetable(request, pk):
     entry    = get_object_or_404(TimeTable, pk=pk)
     subjects = Subject.objects.all()
@@ -50,6 +54,7 @@ def edit_timetable(request, pk):
         return redirect('timetable_view')
     return render(request, 'timetable/edit-timetable.html', {'entry': entry, 'subjects': subjects, 'teachers': teachers})
 
+@teacher_required
 def delete_timetable(request, pk):
     entry = get_object_or_404(TimeTable, pk=pk)
     entry.delete()

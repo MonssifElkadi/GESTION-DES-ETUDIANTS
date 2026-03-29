@@ -1,0 +1,103 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Manage Results: {{ exam.name }}</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'exam_list' %}">Exams</a></li>
+                        <li class="breadcrumb-item active">Results</li>
+                    </ul>
+                </div>
+                 <div class="col-auto text-right float-right ml-auto">
+                    <a href="{% url 'exam_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Exams</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Form to Add/Update Result -->
+            <div class="col-sm-12 col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Add / Update Grade</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Student</label>
+                                <select class="form-control" name="student" required>
+                                    <option value="">Select Student</option>
+                                    {% for st in students %}
+                                    <option value="{{ st.pk }}">{{ st.first_name }} {{ st.last_name }} ({{ st.student_class }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Marks /20</label>
+                                <input type="number" step="0.25" min="0" max="20" class="form-control" name="marks" placeholder="e.g. 15.5" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Save Grade</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List of Results -->
+            <div class="col-sm-12 col-md-7">
+                <div class="card card-table">
+                    <div class="card-header">
+                        <h5 class="card-title">Current Grades</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Marks</th>
+                                        <th>Status (Grade)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for res in results %}
+                                    <tr>
+                                        <td>{{ res.student.first_name }} {{ res.student.last_name }}</td>
+                                        <td><strong>{{ res.marks }}</strong> / 20</td>
+                                        <td>
+                                            {% if res.grade == 'V' %}
+                                                <span class="badge badge-success">Validated (V)</span>
+                                            {% elif res.grade == 'RATT' %}
+                                                <span class="badge badge-warning">Retake (RATT)</span>
+                                            {% else %}
+                                                <span class="badge badge-danger">Not Validated (NV)</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="3" class="text-center text-muted">No results added yet</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright © 2026 PreSkool.</p>
+    </footer>
+</div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+</body>
+</html>
+{% endblock %}

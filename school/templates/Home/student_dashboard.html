@@ -1,0 +1,100 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+   <div class="page-wrapper">
+      <div class="content container-fluid">
+         <div class="page-header">
+            <div class="row">
+               <div class="col-sm-12">
+                  <h3 class="page-title">Welcome Student!</h3>
+                  <ul class="breadcrumb">
+                     <li class="breadcrumb-item active">Student Dashboard</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-md-6 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header">
+                     <h5 class="card-title">My Recent Grades</h5>
+                  </div>
+                  <div class="card-body">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-center">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th>Exam</th>
+                                 <th>Subject</th>
+                                 <th>Grade /20</th>
+                                 <th>Status</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for res in results %}
+                              <tr>
+                                 <td>{{ res.exam.name }}</td>
+                                 <td>{{ res.exam.subject.name }}</td>
+                                 <td><strong>{{ res.marks }}</strong></td>
+                                 <td>
+                                     {% if res.grade == 'V' %}
+                                         <span class="badge badge-success">Validated</span>
+                                     {% elif res.grade == 'RATT' %}
+                                         <span class="badge badge-warning">Retake</span>
+                                     {% else %}
+                                         <span class="badge badge-danger">Not Validated</span>
+                                     {% endif %}
+                                 </td>
+                              </tr>
+                              {% empty %}
+                              <tr><td colspan="4" class="text-center">No grades published yet</td></tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header">
+                     <h5 class="card-title">Upcoming Time Table</h5>
+                  </div>
+                  <div class="card-body">
+                     <div class="table-responsive">
+                        <table class="table table-hover table-center">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th>Day</th>
+                                 <th>Subject</th>
+                                 <th>Time</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for item in timetables %}
+                              <tr>
+                                 <td>{{ item.day }}</td>
+                                 <td>{{ item.subject.name|default:"Not assigned" }}</td>
+                                 <td>{{ item.start_time|time:"H:i" }}</td>
+                              </tr>
+                              {% empty %}
+                              <tr><td colspan="3" class="text-center">No upcoming classes</td></tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <footer>
+         <p>Copyright © 2026 PreSkool.</p>
+      </footer>
+   </div>
+   <script src="{%static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+   <script src="{%static 'assets/js/popper.min.js' %}"></script>
+   <script src="{%static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+   <script src="{%static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+   <script src="{%static 'assets/js/script.js' %}"></script>
+{% endblock %}

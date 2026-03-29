@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+monenv/
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+
+# Environment files
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Seeds (local data scripts)
+seed.py
+seed_*.py
+
+# Local maintenance scripts (in-place editors)
+apply_decorators.py
+swap_decorators.py
+
+# Generated outputs
+pdf_output.txt

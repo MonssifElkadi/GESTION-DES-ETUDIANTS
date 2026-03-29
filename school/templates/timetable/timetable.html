@@ -13,7 +13,9 @@
                     </ul>
                 </div>
                 <div class="col-auto text-right float-right ml-auto">
+                    {% if request.user.is_admin or request.user.is_teacher %}
                     <a href="{% url 'add_timetable' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Time Table</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,7 +49,9 @@
                                         <th>Subject</th>
                                         <th>Teacher</th>
                                         <th>Class</th>
+                                        {% if request.user.is_admin or request.user.is_teacher %}
                                         <th class="text-right">Action</th>
+                                        {% endif %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -59,6 +63,7 @@
                                         <td>{{ item.subject.name|default:"Not assigned" }}</td>
                                         <td>{{ item.teacher.first_name|default:"-" }} {{ item.teacher.last_name|default:"" }}</td>
                                         <td>{{ item.student_class }}</td>
+                                        {% if request.user.is_admin or request.user.is_teacher %}
                                         <td class="text-right">
                                             <div class="actions">
                                                 <a href="{% url 'edit_timetable' item.pk %}" class="btn btn-sm bg-success-light mr-2">
@@ -69,6 +74,7 @@
                                                 </a>
                                             </div>
                                         </td>
+                                        {% endif %}
                                     </tr>
                                     {% empty %}
                                     <tr><td colspan="7" class="text-center">No Time Table Entries Found</td></tr>
