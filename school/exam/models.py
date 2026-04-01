@@ -23,10 +23,11 @@ class ExamResult(models.Model):
         unique_together = ('exam', 'student')
 
     def save(self, *args, **kwargs):
-        # Auto-calculate grade from marks
-        if self.marks >= 10:
+        if self.marks > 12:
+            self.grade = 'M' # Mention
+        elif 10 <= self.marks <= 12:
             self.grade = 'V'
-        elif self.marks >= 7 and self.marks < 10:
+        elif 7 <= self.marks < 10:
             self.grade = 'RATT'
         else:
             self.grade = 'NV'

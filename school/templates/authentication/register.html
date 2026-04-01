@@ -4,93 +4,334 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-<title>Preskool - Register</title>
-
-<!-- Favicon -->
+<title>PreSkool - Register</title>
 <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}">
-<!-- Google Fonts -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&display=swap">
-<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}">
-<!-- Font Awesome CSS -->
 <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
 <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
-<!-- Custom CSS -->
 <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+<style>
+  .role-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .role-card:hover { border-color: #7460ee; background: #f8f5ff; }
+  .role-card.selected { border-color: #7460ee; background: #f0ecff; box-shadow: 0 0 0 3px rgba(116,96,238,0.2); }
+  .role-card i { font-size: 2rem; margin-bottom: 8px; color: #7460ee; }
+  .role-card h6 { margin: 0; font-weight: 600; }
+  .role-card p { margin: 0; font-size: 0.8rem; color: #888; }
+  .section-fields { display: none; }
+  .section-fields.active { display: block; }
+  .step-indicator { display: flex; align-items: center; margin-bottom: 20px; }
+  .step { flex: 1; text-align: center; font-size: 0.8rem; color: #aaa; }
+  .step.active { color: #7460ee; font-weight: 600; }
+  .step-line { flex: 1; height: 2px; background: #e0e0e0; }
+  .step-line.active { background: #7460ee; }
+  .form-section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #7460ee;
+    border-bottom: 1px solid #e8e3ff;
+    padding-bottom: 6px;
+    margin: 18px 0 12px;
+  }
+  .loginbox { max-width: 700px !important; width: 100% !important; }
+  .login-right { width: 100% !important; }
+</style>
 </head>
 <body>
 
 <div class="main-wrapper login-body">
-    <div class="login-wrapper">
-        <div class="container">
-            <div class="loginbox">
-                <div class="login-left">
-                    <img class="img-fluid" src="{% static 'assets/img/logo-white.png' %}" alt="Logo">
-                </div>
-                <div class="login-right">
-                    <div class="login-right-wrap">
-                        <h1>Register</h1>
-                        <p class="account-subtitle">Access to our dashboard</p>
-                        
-                        <!-- Error and success messages -->
-                        {% if messages %}
-                        <div class="alert alert-info">
-                            {% for message in messages %}
-                                <p>{{ message }}</p>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        
-                        <!-- Registration Form -->
-                        <form method="POST" action="{% url 'signup' %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="first_name" placeholder="First Name" required>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="last_name" placeholder="Last Name" required>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="email" name="email" placeholder="Email" required>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="password" name="password" placeholder="Password" required>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="password" name="confirm_password" placeholder="Confirm Password" required>
-                            </div>
-                            <div class="form-group mb-0">
-                                <button class="btn btn-primary btn-block" type="submit">Register</button>
-                            </div>
-                        </form>
-
-                        <div class="login-or">
-                            <span class="or-line"></span>
-                            <span class="span-or">or</span>
-                        </div>
-
-                        <div class="social-login">
-                            <span>Register with</span>
-                            <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="google"><i class="fab fa-google"></i></a>
-                        </div>
-
-                        <div class="text-center dont-have">Already have an account? 
-                            <a href="{% url 'login' %}">Login</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="login-wrapper">
+    <div class="container">
+      <div class="loginbox" style="max-width:680px;">
+        <div class="login-left" style="min-width:160px;">
+          <img class="img-fluid" src="{% static 'assets/img/logo-white.png' %}" alt="Logo">
         </div>
+        <div class="login-right" style="padding:30px 28px;">
+          <div class="login-right-wrap">
+            <h1>Create Account</h1>
+            <p class="account-subtitle">Choose your role and fill in your details</p>
+
+            {% if messages %}
+            <div class="mb-3">
+              {% for message in messages %}
+              <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show py-2" role="alert">
+                {{ message }}
+                <button type="button" class="close py-1" data-dismiss="alert"><span>&times;</span></button>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'signup' %}" id="registerForm">
+              {% csrf_token %}
+              <input type="hidden" name="role" id="roleInput">
+
+              <!-- STEP 1: Role Selection -->
+              <div id="step1">
+                <p class="form-section-title"><i class="fas fa-user-tag mr-1"></i> Step 1 — Who are you?</p>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="role-card" id="cardTeacher" onclick="selectRole('teacher')">
+                      <i class="fas fa-chalkboard-teacher"></i>
+                      <h6>Teacher</h6>
+                      <p>I am a staff member</p>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="role-card" id="cardStudent" onclick="selectRole('student')">
+                      <i class="fas fa-user-graduate"></i>
+                      <h6>Student</h6>
+                      <p>I am enrolled here</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="roleError" class="text-danger small mt-1" style="display:none;">Please select a role to continue.</div>
+                <button type="button" class="btn btn-primary btn-block mt-3" onclick="goToStep2()">
+                  Continue <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+              </div>
+
+              <!-- STEP 2: Common + Role-specific fields -->
+              <div id="step2" style="display:none;">
+                <button type="button" class="btn btn-link p-0 mb-3 text-muted" onclick="goToStep1()">
+                  <i class="fas fa-arrow-left mr-1"></i> Back
+                </button>
+                <p class="form-section-title"><i class="fas fa-id-card mr-1"></i> Step 2 — Account Details</p>
+
+                <!-- Common fields -->
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <input class="form-control" type="text" name="first_name" placeholder="First Name" required>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <input class="form-control" type="text" name="last_name" placeholder="Last Name" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" type="email" name="email" placeholder="Email Address" required>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <input class="form-control" type="password" name="password" placeholder="Password" required>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <input class="form-control" type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ── TEACHER fields ── -->
+                <div class="section-fields" id="teacher-fields">
+                  <p class="form-section-title"><i class="fas fa-chalkboard-teacher mr-1"></i> Teacher Profile</p>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="teacher_id" placeholder="Teacher ID (e.g. T-001)">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select name="teacher_gender" class="form-control">
+                          <option value="">Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="date" name="teacher_date_of_birth" placeholder="Date of Birth">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="date" name="teacher_joining_date" placeholder="Joining Date">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="teacher_mobile_number" placeholder="Mobile Number">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select name="department" class="form-control">
+                          <option value="">Select Department</option>
+                          {% for dept in departments %}
+                          <option value="{{ dept.pk }}">{{ dept.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ── STUDENT fields ── -->
+                <div class="section-fields" id="student-fields">
+                  <p class="form-section-title"><i class="fas fa-user-graduate mr-1"></i> Student Profile</p>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="student_id" placeholder="Student ID (e.g. S-001)">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <select name="student_gender" class="form-control">
+                          <option value="">Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="date" name="student_date_of_birth" placeholder="Date of Birth">
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="date" name="student_joining_date" placeholder="Joining Date">
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="student_class" placeholder="Class (e.g. Grade 10A)">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="student_mobile_number" placeholder="Mobile">
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="admission_number" placeholder="Admission No.">
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="section" placeholder="Section">
+                      </div>
+                    </div>
+                  </div>
+                  <p class="form-section-title"><i class="fas fa-users mr-1"></i> Parent Info</p>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="father_name" placeholder="Father's Name">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="father_mobile" placeholder="Father's Mobile">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="email" name="father_email" placeholder="Father's Email">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="mother_name" placeholder="Mother's Name">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="text" name="mother_mobile" placeholder="Mother's Mobile">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="form-group">
+                        <input class="form-control" type="email" name="mother_email" placeholder="Mother's Email">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" type="text" name="present_address" placeholder="Present Address">
+                  </div>
+                </div>
+
+                <div class="form-group mb-0 mt-3">
+                  <button class="btn btn-primary btn-block" type="submit">
+                    <i class="fas fa-user-plus mr-1"></i> Create Account
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="text-center dont-have mt-3">
+              Already have an account? <a href="{% url 'login' %}">Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<!-- jQuery -->
 <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
-<!-- Bootstrap Core JS -->
 <script src="{% static 'assets/js/popper.min.js' %}"></script>
 <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-<!-- Custom JS -->
 <script src="{% static 'assets/js/script.js' %}"></script>
+<script>
+  var selectedRole = '';
+
+  function selectRole(role) {
+    selectedRole = role;
+    document.getElementById('roleInput').value = role;
+    document.getElementById('cardTeacher').classList.toggle('selected', role === 'teacher');
+    document.getElementById('cardStudent').classList.toggle('selected', role === 'student');
+    document.getElementById('roleError').style.display = 'none';
+  }
+
+  function goToStep2() {
+    if (!selectedRole) {
+      document.getElementById('roleError').style.display = 'block';
+      return;
+    }
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+
+    // Show correct fields
+    document.querySelectorAll('.section-fields').forEach(el => el.classList.remove('active'));
+    document.getElementById(selectedRole + '-fields').classList.add('active');
+  }
+
+  function goToStep1() {
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('step2').style.display = 'none';
+  }
+</script>
 </body>
 </html>

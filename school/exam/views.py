@@ -57,12 +57,16 @@ def delete_exam(request, pk):
 @teacher_required
 def add_result(request, pk):
     exam     = get_object_or_404(Exam, pk=pk)
-    students = Student.objects.all()
+    students = Student.objects.filter(student_class=exam.student_class).order_by('first_name', 'last_name')
     results  = ExamResult.objects.filter(exam=exam)
     if request.method == 'POST':
         student_id = request.POST.get('student')
         marks      = request.POST.get('marks')
-        student    = get_object_or_404(Student, pk=student_id)
+        student    = get_object_or_404(
+            Student,
+            pk=student_id,
+            student_class=exam.student_class,
+        )
         result, created = ExamResult.objects.update_or_create(
             exam=exam, 
             student=student, 

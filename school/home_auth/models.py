@@ -16,7 +16,6 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=30, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    # Fields for user roles
     is_student = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)

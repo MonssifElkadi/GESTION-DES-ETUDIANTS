@@ -14,6 +14,81 @@
             </div>
          </div>
          <div class="row">
+            <div class="col-12">
+               <div class="card">
+                  <div class="card-header">
+                     <h5 class="card-title mb-0">Holidays (Next 30 Days)</h5>
+                  </div>
+                  <div class="card-body">
+                     {% if upcoming_holidays %}
+                     <div class="table-responsive">
+                        <table class="table table-hover table-center mb-0">
+                           <thead class="thead-light">
+                              <tr>
+                                 <th>Date</th>
+                                 <th>Holiday</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for holiday in upcoming_holidays %}
+                              <tr>
+                                 <td>{{ holiday.date|date:"d M Y" }}</td>
+                                 <td>{{ holiday.name }}</td>
+                                 <td>{{ holiday.description|default:"-" }}</td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                        </table>
+                     </div>
+                     {% else %}
+                     <p class="text-muted mb-0">No holidays scheduled in the next 30 days.</p>
+                     {% endif %}
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-md-12 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header d-flex justify-content-between align-items-center">
+                     <h5 class="card-title mb-0">My Profile</h5>
+                     <span class="badge badge-info">Student</span>
+                  </div>
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-md-6">
+                           <p class="mb-2"><strong>Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+                           <p class="mb-2"><strong>Username:</strong> {{ user.username }}</p>
+                           <p class="mb-0"><strong>Email:</strong> {{ user.email|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                           {% if student_profile %}
+                           <p class="mb-2"><strong>Class:</strong> {{ student_profile.student_class|default:"-" }}</p>
+                           <p class="mb-2"><strong>Section:</strong> {{ student_profile.section|default:"-" }}</p>
+                           <p class="mb-0"><strong>Admission:</strong> {{ student_profile.admission_number|default:"-" }}</p>
+                           {% else %}
+                           <p class="text-muted mb-0">No student profile linked.</p>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-md-12 d-flex">
+               <div class="card flex-fill">
+                  <div class="card-header">
+                     <h5 class="card-title mb-0">Class Load</h5>
+                  </div>
+                  <div class="card-body">
+                     <div id="student-class-load-chart"></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
             <div class="col-md-6 d-flex">
                <div class="card flex-fill">
                   <div class="card-header">
@@ -37,12 +112,14 @@
                                  <td>{{ res.exam.subject.name }}</td>
                                  <td><strong>{{ res.marks }}</strong></td>
                                  <td>
-                                     {% if res.grade == 'V' %}
-                                         <span class="badge badge-success">Validated</span>
+                                     {% if res.grade == 'M' %}
+                                        <span class="badge badge-info">Mention</span>
+                                     {% elif res.grade == 'V' %}
+                                        <span class="badge badge-success">Validated</span>
                                      {% elif res.grade == 'RATT' %}
-                                         <span class="badge badge-warning">Retake</span>
+                                        <span class="badge badge-warning">Retake</span>
                                      {% else %}
-                                         <span class="badge badge-danger">Not Validated</span>
+                                        <span class="badge badge-danger">Not Validated</span>
                                      {% endif %}
                                  </td>
                               </tr>
@@ -96,5 +173,23 @@
    <script src="{%static 'assets/js/popper.min.js' %}"></script>
    <script src="{%static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
    <script src="{%static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+   <script src="{%static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         var loadEl = document.querySelector('#student-class-load-chart');
+         if (loadEl) {
+            var chartData = JSON.parse('{{ student_class_load_chart|escapejs }}');
+            var labels = Array.isArray(chartData.labels) ? chartData.labels : [];
+            var counts = Array.isArray(chartData.counts) ? chartData.counts : [];
+            var loadChart = new ApexCharts(loadEl, {
+               chart: { type: 'bar', height: 280, toolbar: { show: false } },
+               dataLabels: { enabled: false },
+               series: [{ name: 'Classes', data: counts }],
+               xaxis: { categories: labels }
+            });
+            loadChart.render();
+         }
+      });
+   </script>
    <script src="{%static 'assets/js/script.js' %}"></script>
 {% endblock %}

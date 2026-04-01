@@ -1,0 +1,145 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Full Time Table</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'timetable_view' %}">Time Table</a></li>
+                        <li class="breadcrumb-item active">Full Time Table</li>
+                    </ul>
+                </div>
+                <div class="col-auto text-right float-right ml-auto">
+                    <a href="{% url 'timetable_view' %}" class="btn btn-secondary">Back to Time Table</a>
+                    {% if request.user.is_admin or request.user.is_teacher %}
+                    <a href="{% url 'add_timetable' %}" class="btn btn-primary ml-2"><i class="fas fa-plus"></i> Add Time Table</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% if no_class %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No classes assigned yet</h5>
+                        <p class="text-muted">Your class schedule will appear here once an admin assigns you to a class.</p>
+                    </div>
+                </div>
+                {% elif class_grids %}
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="fullClassTabs" role="tablist">
+                            {% for class_grid in class_grids %}
+                            <li class="nav-item">
+                                <a class="nav-link {% if forloop.first %}active{% endif %}"
+                                   id="full-tab-{{ forloop.counter }}"
+                                   data-toggle="tab"
+                                   href="#full-panel-{{ forloop.counter }}"
+                                   role="tab">
+                                    <i class="fas fa-chalkboard mr-1"></i> {{ class_grid.class_name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="fullClassTabContent">
+                            {% for class_grid in class_grids %}
+                            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                                 id="full-panel-{{ forloop.counter }}"
+                                 role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-center mb-0">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Time</th>
+                                                {% for day in days %}
+                                                <th>{{ day }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in class_grid.rows %}
+                                            <tr>
+                                                <td class="font-weight-bold">
+                                                    {{ row.start_time|time:"H:i" }} - {{ row.end_time|time:"H:i" }}
+                                                </td>
+                                                {% for cell in row.cells %}
+                                                <td>
+                                                    {% if cell %}
+                                                        {% for item in cell %}
+                                                        <div class="mb-2">
+                                                            <div><strong>{{ item.subject.name|default:"Not assigned" }}</strong></div>
+                                                            <div class="text-muted small">
+                                                                {{ item.teacher.first_name|default:"-" }} {{ item.teacher.last_name|default:"" }}
+                                                            </div>
+                                                            {% if request.user.is_admin or request.user.is_teacher %}
+                                                            <a href="{% url 'delete_timetable' item.pk %}?next={% url 'full_timetable' %}"
+                                                               class="btn btn-sm bg-danger-light mt-1"
+                                                               onclick="return confirm('Delete this entry?');">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                            {% endif %}
+                                                        </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <span class="text-muted">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="{{ days|length|add:'1' }}" class="text-center text-muted">
+                                                    No timetable entries for this class
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No timetable entries found</h5>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Copyright © 2026 PreSkool.</p>
+    </footer>
+</div>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+{% endblock %}

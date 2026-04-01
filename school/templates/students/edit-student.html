@@ -6,14 +6,28 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Edit Students</h3>
+                    <h3 class="page-title">Edit Student</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/students">Students</a></li>
-                        <li class="breadcrumb-item active">Edit Students</li>
+                        <li class="breadcrumb-item"><a href="{% url 'student_list' %}">Students</a></li>
+                        <li class="breadcrumb-item active">Edit Student</li>
                     </ul>
                 </div>
             </div>
         </div>
+
+        {% if messages %}
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -38,16 +52,16 @@
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
-                                        <label>Student Id</label>
-                                        <input type="text" name="student_id" class="form-control" value="{{ student.student_id }}">
+                                        <label>Student ID</label>
+                                        <input type="text" name="student_id" class="form-control" value="{{ student.student_id }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Gender</label>
                                         <select name="gender" class="form-control">
-                                            <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
                                             <option value="Male" {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+                                            <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
                                         </select>
                                     </div>
                                 </div>
@@ -61,12 +75,6 @@
                                     <div class="form-group">
                                         <label>Class</label>
                                         <input type="text" name="student_class" class="form-control" value="{{ student.student_class }}">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="form-group">
-                                        <label>Religion</label>
-                                        <input type="text" name="religion" class="form-control" value="{{ student.religion }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
@@ -95,76 +103,82 @@
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
-                                        <label>Student Image</label>
+                                        <label>Student Image <small class="text-muted">(optional — leave empty to keep current)</small></label>
                                         <input type="file" name="student_image" class="form-control">
-                                        <small>Current Image: {{ student.student_image.url }}</small>
+                                        {% if student.student_image %}
+                                        <small class="text-success">Current image: <a href="{{ student.student_image.url }}" target="_blank">View</a></small>
+                                        {% else %}
+                                        <small class="text-muted">No image currently uploaded.</small>
+                                        {% endif %}
                                     </div>
                                 </div>
+
                                 <div class="col-12">
                                     <h5 class="form-title"><span>Parent Information</span></h5>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Father's Name</label>
-                                        <input type="text" name="father_name" class="form-control" value="{{ parent.father_name }}">
+                                        <input type="text" name="father_name" class="form-control" value="{{ student.parent.father_name }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Father's Occupation</label>
-                                        <input type="text" name="father_occupation" class="form-control" value="{{ parent.father_occupation }}">
+                                        <input type="text" name="father_occupation" class="form-control" value="{{ student.parent.father_occupation }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Father's Mobile</label>
-                                        <input type="text" name="father_mobile" class="form-control" value="{{ parent.father_mobile }}">
+                                        <input type="text" name="father_mobile" class="form-control" value="{{ student.parent.father_mobile }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Father's Email</label>
-                                        <input type="email" name="father_email" class="form-control" value="{{ parent.father_email }}">
+                                        <input type="email" name="father_email" class="form-control" value="{{ student.parent.father_email }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Mother's Name</label>
-                                        <input type="text" name="mother_name" class="form-control" value="{{ parent.mother_name }}">
+                                        <input type="text" name="mother_name" class="form-control" value="{{ student.parent.mother_name }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Mother's Occupation</label>
-                                        <input type="text" name="mother_occupation" class="form-control" value="{{ parent.mother_occupation }}">
+                                        <input type="text" name="mother_occupation" class="form-control" value="{{ student.parent.mother_occupation }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Mother's Mobile</label>
-                                        <input type="text" name="mother_mobile" class="form-control" value="{{ parent.mother_mobile }}">
+                                        <input type="text" name="mother_mobile" class="form-control" value="{{ student.parent.mother_mobile }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Mother's Email</label>
-                                        <input type="email" name="mother_email" class="form-control" value="{{ parent.mother_email }}">
+                                        <input type="email" name="mother_email" class="form-control" value="{{ student.parent.mother_email }}">
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Present Address</label>
-                                        <textarea name="present_address" class="form-control">{{ parent.present_address }}</textarea>
+                                        <textarea name="present_address" class="form-control">{{ student.parent.present_address }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="form-group">
                                         <label>Permanent Address</label>
-                                        <textarea name="permanent_address" class="form-control">{{ parent.permanent_address }}</textarea>
+                                        <textarea name="permanent_address" class="form-control">{{ student.parent.permanent_address }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <a href="{% url 'student_list' %}" class="btn btn-secondary ml-2">Cancel</a>
                                 </div>
                             </div>
                         </form>

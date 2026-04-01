@@ -95,12 +95,12 @@
                   <div class="card-header">
                      <div class="row align-items-center">
                         <div class="col-6">
-                           <h5 class="card-title">Number of Students (Demo)</h5>
+                           <h5 class="card-title">Number of Students</h5>
                         </div>
                      </div>
                   </div>
                   <div class="card-body">
-                     <div id="bar"></div>
+                     <div id="student-count-chart"></div>
                   </div>
                </div>
             </div>
@@ -115,6 +115,31 @@
    <script src="{%static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
    <script src="{%static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
    <script src="{%static 'assets/plugins/apexchart/apexcharts.min.js' %}"></script>
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         var chartEl = document.querySelector('#student-count-chart');
+         if (!chartEl) {
+            return;
+         }
+         var chartData = JSON.parse('{{ student_class_chart|escapejs }}');
+         var labels = Array.isArray(chartData.labels) ? chartData.labels : [];
+         var counts = Array.isArray(chartData.counts) ? chartData.counts : [];
+         var chart = new ApexCharts(chartEl, {
+            chart: { type: 'bar', height: 350, toolbar: { show: false } },
+            dataLabels: { enabled: false },
+            plotOptions: { bar: { columnWidth: '45%' } },
+            series: [{ name: 'Students', data: counts }],
+            xaxis: {
+               categories: labels,
+               labels: { rotate: -45 }
+            },
+            yaxis: {
+               labels: { style: { colors: '#777' } }
+            }
+         });
+         chart.render();
+      });
+   </script>
    <script src="{%static 'assets/plugins/apexchart/chart-data.js' %}"></script>
    <script src="{%static 'assets/js/script.js' %}"></script>
 {% endblock %}

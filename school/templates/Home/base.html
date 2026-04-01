@@ -74,7 +74,15 @@
                      </div>
                      <div class="user-text">
                         <h6>{{ user.username }}</h6>
+                        {% if request.user.is_superuser or request.user.is_admin %}
                         <p class="text-muted mb-0">Administrator</p>
+                        {% elif request.user.is_teacher %}
+                        <p class="text-muted mb-0">Teacher</p>
+                        {% elif request.user.is_student %}
+                        <p class="text-muted mb-0">Student</p>
+                        {% else %}
+                        <p class="text-muted mb-0">User</p>
+                        {% endif %}
                      </div>
                   </div>
                   <a class="dropdown-item" href="#">My Profile</a>
