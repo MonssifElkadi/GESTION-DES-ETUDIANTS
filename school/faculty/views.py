@@ -113,9 +113,14 @@ def index(request):
 
         student_class_load_chart = build_day_chart_data(student_day_totals)
 
+        if student:
+            results = ExamResult.objects.filter(student=student)[:5]
+        else:
+            results = ExamResult.objects.none()
+
         # Default to student dashboard
         context = {
-            'results': ExamResult.objects.all()[:5],
+            'results': results,
             'student_profile': student,
             'upcoming_holidays': upcoming_holidays,
             'timetables': timetables,
