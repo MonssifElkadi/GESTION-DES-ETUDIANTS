@@ -17,6 +17,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Description</th>
+                                <th>Head Teacher</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -26,6 +27,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ dept.name }}</td>
                                 <td>{{ dept.description }}</td>
+                                <td>{% if dept.head_teacher %}{{ dept.head_teacher }}{% else %}None{% endif %}</td>
                                 <td>
                                     <a href="{% url 'edit_department' dept.pk %}" class="btn btn-sm btn-warning">Edit</a>
                                     <a href="{% url 'delete_department' dept.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this department?');">Delete</a>

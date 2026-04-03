@@ -19,6 +19,15 @@
                             <label>Description</label>
                             <textarea name="description" class="form-control" rows="3"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label>Head Teacher</label>
+                            <select name="head_teacher" class="form-control">
+                                <option value="">Select Head Teacher</option>
+                                {% for teacher in teachers %}
+                                    <option value="{{ teacher.pk }}">{{ teacher }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                         <a href="{% url 'department_list' %}" class="btn btn-secondary">Cancel</a>
                     </form>
